@@ -1,0 +1,24 @@
+{
+  "name": "vendor_name/api",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "autoload": {
+    "psr-4": {
+      "\\": "./",
+      "core\\": "core/",
+      "controllers\\": "controllers/",
+      "models\\": "models/"
+    }
+  },
+  "authors": [
+    {
+      "name": "elhjuojy",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "vlucas/phpdotenv": "^5.5",
+    "ext-pdo": "*"
+  }
+}
