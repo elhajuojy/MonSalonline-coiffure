@@ -1,6 +1,7 @@
 # The Hair Salon Database Project Example
 
-![Hair Salon](https://holowczak.com/wp-content/uploads/012218_1432_TheHairSalo1.png)
+![Screenshot 2023-01-31 at 14 52 25](https://user-images.githubusercontent.com/86893073/215779834-11805de2-bdd9-4b12-82d5-5462dc8a687b.png)
+
 
 ## Description
 
