@@ -1,5 +1,12 @@
 <?php 
 
 $router->get('/', "controllers/HomeController.php");
-$router->get('api/', "controllers/HomeController.php");
-$router->get('api/users', "controllers/UserController.php");
+
+
+$router->post('/api/customer/login', "controllers/Customer/login.php");
+$router->post('/api/customer/register', "controllers/Customer/register.php");
+
+
+
+
+
