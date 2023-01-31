@@ -44,12 +44,13 @@ class Router
     public function route($uri, $method){
         foreach($this->routes as $route){
             if($route['uri'] === $uri && $route['method'] === strtoupper($method)){
-
+                
                 return require base_path($route['controller']);
             }
         }
         
-        authorize(false, Response::NOT_FOUND);
+        http_response_code(Response::NOT_FOUND);
+        echo json_encode(['message' => 'Not Found']);
     }
 
 
