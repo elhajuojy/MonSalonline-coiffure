@@ -2,6 +2,7 @@
 
 ![Screenshot 2023-01-31 at 14 52 25](https://user-images.githubusercontent.com/86893073/215779834-11805de2-bdd9-4b12-82d5-5462dc8a687b.png)
 
+[API Documentation 💌](https://documenter.getpostman.com/view/22002647/2s935iv6ja)
 
 ## Description
 
