@@ -5,6 +5,8 @@ use core\Database;
 
 
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Content-Type: application/json');
 
 
 session_start();
@@ -18,7 +20,6 @@ require_once BASE_PATH . 'functions.php';
 
 
 require base_path('bootstrap.php');
-
 
 
 
