@@ -138,6 +138,19 @@ function imageUpload($imageRequest, $imagePath = "assets/images/"): string
     }
 }
 
+function deleteFile($dir, $imagename)
+{
+    if (file_exists($dir . "/" . $imagename)) {
+        unlink($dir . "/" . $imagename);
+    }
+}
+
+
+function filterRequest($requestname)
+{
+  return  htmlspecialchars(strip_tags($_POST[$requestname]));
+}
+
 
 function randomString($n)
 {
