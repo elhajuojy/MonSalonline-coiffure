@@ -1,28 +1,47 @@
+
 <script setup>
+
 </script>
 
 <template>
-  <v-bottom-navigation v-model="value">
-    <v-btn value="recent">
-      <span>Recent</span>
-
-      <v-icon>mdi-history</v-icon>
-    </v-btn>
-
-    <v-btn value="favorites">
-      <span>Favorites</span>
-
-      <v-icon>mdi-heart</v-icon>
-    </v-btn>
-
-    <v-btn value="nearby">
-      <span>Nearby</span>
-
-      <v-icon>mdi-map-marker</v-icon>
-    </v-btn>
-  </v-bottom-navigation>
+  <header>
+    <h3>
+      MonSaloneline
+    </h3>
+    <nav>
+      <router-link to="/">Home</router-link>
+      <router-link to="/login">Login</router-link>
+      <router-link to="/register">Register</router-link>
+    </nav>
+  </header>
 </template>
 
+<style  scoped>
+header {
+  display: flex;
+  width: 100%;
+  height: 10vh;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem ;
+  background-color: #333;
+  color: #fff;
+  position: sticky;
+}
 
-<style lang="scss" scoped>
+nav {
+  display: flex;
+  justify-content: space-between;
+
+  align-items: center;
+  gap: 20px;
+  color: #fff;
+  margin: 20px;
+}
+nav a{
+  color: #fff;
+  text-decoration: none;
+}
+
+
 </style>
