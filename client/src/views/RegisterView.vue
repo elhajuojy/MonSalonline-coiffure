@@ -1,5 +1,6 @@
 <script setup>
 import BaseHeader from  "../components/BaseHeader.vue"
+import Swal from 'sweetalert2'
 
 
 
@@ -14,11 +15,16 @@ const register = async(e)=>{
         body: myFormData
     });
     const data = await response.json()
-    console.log(data)
-    if(response.status=="200"){
+    // console.log(data);
+    // console.log(response.status);
+    if(response.status ===  201){
         // you need to store his referance on cookie so he can register in all website 
         // push to customer his code reference so he can login anytime 
         // router.push("/");
+        console.log(data)
+        Swal.fire(
+            "Your Account Have been Created \n this is your login Reference :"+data.Customer_reference
+        );
     }
     else{
         
@@ -44,49 +50,49 @@ const register = async(e)=>{
                     <div class="input max-w-lg">
                         <label for="FirstName">FirstName</label>
                         <div class="input-value">
-                            <input type="text" name="FirstName" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" name="FirstName" placeholder="elhjuojy ..." class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
                     <div class="input max-w-lg">
                         <label for="LastName">LastName</label>
                         <div class="input-value">
-                            <input type="text" name="LastName" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" name="LastName" placeholder="elmahdi..." class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
                     <div class="input max-w-lg">
                         <label for="Email">Email</label>
                         <div class="input-value">
-                            <input type="Email" name="Email" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="Email" name="Email" placeholder="elhjuojy@gmail.com" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
                     <div class="input max-w-lg">
                         <label for="PhoneNumber">PhoneNumber</label>
                         <div class="input-value">
-                            <input type="Number" name="PhoneNumber" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="Number" name="PhoneNumber" placeholder="+212659707721" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
                     <div class="input max-w-lg">
                         <label for="Address">Address</label>
                         <div class="input-value">
-                            <input type="text" name="Address" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" name="Address" placeholder="AnyAddresse 2235 AnyState 3365" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
                     <div class="input max-w-lg">
                         <label for="City">City</label>
                         <div class="input-value">
-                            <input type="text" name="City" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" name="City" placeholder="New York" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
                     <div class="input max-w-lg">
                         <label for="State">State</label>
                         <div class="input-value">
-                            <input type="text" name="State" placeholder="elhjuojy" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" name="State" placeholder="AnyState" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <span class="text-red-600"></span>
                     </div>
