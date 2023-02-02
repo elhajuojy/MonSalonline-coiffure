@@ -20,6 +20,7 @@ var login = async (e)=>{
     });
     const data = await response.json()
     if(response.status=="200"){
+        // you need to store his referance on cookie so he can register in all website 
         router.push("/");
     }
     else{
