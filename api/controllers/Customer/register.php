@@ -8,16 +8,21 @@ use core\Validator;
 $db = App::resolve(Database::class);
 
 
+// echo json_encode($_POST);
+// die();
+
+
+
 $newCustomer = $_POST;
 
 
-$firstname = filterRequest($newCustomer['FirstName']);
-$lastname = filterRequest($newCustomer['LastName']);
-$email = filterRequest($newCustomer['Email']);
-$phone = filterRequest($newCustomer['PhoneNumber']);
-$address = filterRequest($newCustomer['Address']);
-$city = filterRequest($newCustomer['City']);
-$state = filterRequest($newCustomer['State']);
+$firstname = $newCustomer['FirstName'];
+$lastname = $newCustomer['LastName'];
+$email = $newCustomer['Email'];
+$phone = $newCustomer['PhoneNumber'];
+$address = $newCustomer['Address'];
+$city = $newCustomer['City'];
+$state = $newCustomer['State'];
 $randomReference = randomString(10);
 
 if(Validator::string($firstname, 2, 50) && Validator::string($lastname, 2, 50) && Validator::email($email) && Validator::string($phone, 10, 10) && Validator::string($address, 2, 50) && Validator::string($city, 2, 50) && Validator::string($state, 2, 50)){
@@ -41,7 +46,7 @@ if(Validator::string($firstname, 2, 50) && Validator::string($lastname, 2, 50) &
 
 else{
     http_response_code(Response::BAD_REQUEST);
-    echo json_encode(['message' => 'Bad Request']);
+    echo json_encode(['message' => 'Bad Request some inpus are not valid']);
 }
 
 //after validating the data, we can insert it into the database
