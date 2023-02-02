@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <header>
+  <header class=". shadow">
     <h3>
       MonSaloneline
     </h3>
