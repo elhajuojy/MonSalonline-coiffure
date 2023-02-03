@@ -5,27 +5,26 @@ import { useStorage } from '@vueuse/core'
 
 export const useClientStore=  defineStore('ClientStore',{
     state: () => ({
-       useRef : useStorage('userRef', null),
+       userRef : useStorage('userRef', null),
        userInformation : null,
         userToken : null,
         userRole : null,
     }),
     getters:{
-        userRef (){
-            return this.useRef
+        getuserRef (){
+            return this.userRef
         }
     }
     ,
     actions:{
-        setUserRef(ref){
-            this.useRef = ref
-        }
-        ,
         setUserRefInLocalStorage(ref){
-            this.useRef = ref
             localStorage.setItem('userRef', ref)
         },
-
+        redirectwhenUserIsNotConnected(){
+            if(this.userRef === null){
+                window.location.href = '/login'
+            }
+        },
         setUserInformation(info){
             this.userInformation = info
         }

@@ -25,9 +25,8 @@ var login = async (e)=>{
     if(response.status=="200"){
         // you need to store his referance on cookie so he can register in all website 
         console.log(data.Customer_reference);
-        ClientStore.useRef = data.Customer_reference;
         ClientStore.setUserRefInLocalStorage(data.Customer_reference);
-        router.push("/");
+        router.push("/reserve");
     }
     else{
         

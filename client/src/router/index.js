@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+const isLoggedIn = () => {
+  console.log(localStorage.getItem('userRef') !== null)
+  return localStorage.getItem('userRef') !== null
+}
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -23,7 +27,18 @@ const router = createRouter({
       path:'/register',
       name : "register",
       component : ()=>import("../views/RegisterView.vue")
-    }
+    },
+    {
+      path: '/reserve',
+      component: () => import('../views/ReserveView.vue'),
+      beforeEnter(to, from, next) {
+        if (!isLoggedIn()) {
+          next({ path: '/login' })
+        } else {
+          next()
+        }
+      },
+    },
   ]
 })
 

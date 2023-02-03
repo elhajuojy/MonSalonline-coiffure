@@ -6,8 +6,10 @@ import { useClientStore } from '../stores/ClientStore';
 const ClientStore = useClientStore();
 
 
-var userRef = ClientStore.useRef;
+var userRef = ClientStore.getuserRef;
+console.log(userRef)
 
+// userRef = null;
 </script>
 
 <template>
@@ -16,7 +18,8 @@ var userRef = ClientStore.useRef;
       <router-link to="/">MonSaloneline</router-link>
     </h3>
     <nav>
-      <a  class=". text-yellow-500 userRef" v-if="userRef" href="#">{{userRef}}</a>
+
+      <router-link to="/reserve" class="userRef" v-if="userRef">{{userRef}}</router-link>
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
       <router-link to="/register">Register</router-link>
