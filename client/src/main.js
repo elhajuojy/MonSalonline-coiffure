@@ -13,8 +13,10 @@ loadFonts()
 const pinia = createPinia()
 
 import './assets/main.css';
-
+import 'v-calendar/dist/style.css';
+import VCalendar from 'v-calendar';
 createApp(App)
+  .use(VCalendar,{})
   .use(router)
   .use(pinia)
   .use(vuetify)
