@@ -3,9 +3,12 @@ import { ref } from "vue";
 import BaseHeader from  "../components/BaseHeader.vue"
 import {useRouter} from "vue-router";
 import axios from "axios"
+import { useClientStore } from "../stores/ClientStore";
 const reference = ref("")
 const messageError = ref("")
 const router = useRouter();
+
+const ClientStore = useClientStore();
 
 var login = async (e)=>{
     const formData = new FormData();
@@ -21,6 +24,9 @@ var login = async (e)=>{
     const data = await response.json()
     if(response.status=="200"){
         // you need to store his referance on cookie so he can register in all website 
+        console.log(data.Customer_reference);
+        ClientStore.useRef = data.Customer_reference;
+        ClientStore.setUserRefInLocalStorage(data.Customer_reference);
         router.push("/");
     }
     else{

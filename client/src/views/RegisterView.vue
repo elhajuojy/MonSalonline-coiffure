@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 
 
 
+
 const register = async(e)=>{
     // console.log(e.target);
     // const form = e.target;
@@ -23,7 +24,7 @@ const register = async(e)=>{
         // router.push("/");
         console.log(data)
         Swal.fire(
-            "Your Account Have been Created \n this is your login Reference :"+data.Customer_reference
+            "Your Account Have been Created \n this is your login Reference :" + data.Customer_reference
         );
     }
     else{

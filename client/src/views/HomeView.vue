@@ -4,6 +4,15 @@ import BaseCalander from "../components/BaseCalander.vue";
 import BaseCard from "../components/BaseCard.vue";
 import BaseFooter from "../components/BaseFooter.vue";
 import BaseCover from "../components/BaseCover.vue";
+import {useTaskStore} from "../stores/TaskStore";
+import { ref } from "vue";
+
+const taskStore = useTaskStore();
+
+
+
+
+
 
 const imgCover = 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1136&q=80';
 const cardsData = [
@@ -28,6 +37,7 @@ const cardsData = [
       " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a",
   },
 ];
+
 
 </script>
 

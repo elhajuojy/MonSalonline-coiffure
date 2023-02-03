@@ -1,17 +1,26 @@
 
 <script setup>
+import { useClientStore } from '../stores/ClientStore';
+
+
+const ClientStore = useClientStore();
+
+
+var userRef = ClientStore.useRef;
 
 </script>
 
 <template>
   <header class=". shadow">
     <h3>
-      MonSaloneline
+      <router-link to="/">MonSaloneline</router-link>
     </h3>
     <nav>
+      <a  class=". text-yellow-500 userRef" v-if="userRef" href="#">{{userRef}}</a>
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
       <router-link to="/register">Register</router-link>
+      
     </nav>
   </header>
 </template>
@@ -38,9 +47,13 @@ nav {
   color: #fff;
   margin: 20px;
 }
-nav a{
+ nav a{
   color: #fff;
   text-decoration: none;
+}
+
+.userRef{
+  color:  gold;
 }
 
 

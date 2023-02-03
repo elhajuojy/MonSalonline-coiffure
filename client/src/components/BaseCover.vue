@@ -1,7 +1,6 @@
 
 <script setup>
 const props = defineProps(['img'])
-console.log(props.img)
 const color = 'red';
 </script>
 
