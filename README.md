@@ -6,6 +6,9 @@
 
 ![alt text](https://simplonline.co/_next/image?url=https%3A%2F%2Fsimplonline-v3-prod.s3.eu-west-3.amazonaws.com%2Fmedia%2Fimage%2Fpng%2F42bee9c2-2aad-4eb9-8c9a-82d6d260b828.png&w=1280&q=75 "Logo Title Text 1")
 
+![Screenshot 2023-02-04 at 13 08 55](https://user-images.githubusercontent.com/86893073/216766880-f342df00-67c7-40b8-8b35-3ff6bcdc3c02.png)
+
+
 Contexte du projet
 Un salon de coiffure souhaite permettre à ses clients de prendre rendez-vous en ligne. Chaque rendez-vous dure une heure. Le client veut une interface «user friendly» accessible sure toute platforme et qui respecte les bon normes du UX et UI
 
