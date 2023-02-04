@@ -1,0 +1,52 @@
+[
+    {
+      "day": 1,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 14,
+      "afternoon_end": 20
+    },
+    {
+      "day": 2,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 14,
+      "afternoon_end": 20
+    },
+    {
+      "day": 3,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 14,
+      "afternoon_end": 20
+    },
+    {
+      "day": 4,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 14,
+      "afternoon_end": 20
+    },
+    {
+      "day": 5,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 16,
+      "afternoon_end": 22
+    },
+    {
+      "day": 6,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 14,
+      "afternoon_end": 20
+    },
+    {
+      "day": 7,
+      "morning_start": 9,
+      "morning_end": 12,
+      "afternoon_start": 0,
+      "afternoon_end": 0
+    }
+  ]
+  

@@ -7,7 +7,6 @@ const ClientStore = useClientStore();
 
 
 var userRef = ClientStore.getuserRef;
-console.log(userRef)
 
 // userRef = null;
 </script>

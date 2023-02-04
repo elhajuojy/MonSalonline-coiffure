@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
 const isLoggedIn = () => {
-  console.log(localStorage.getItem('userRef') !== null)
   return localStorage.getItem('userRef') !== null
 }
 const router = createRouter({
