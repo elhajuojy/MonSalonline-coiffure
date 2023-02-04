@@ -19,13 +19,14 @@ const state = reactive({
 const fetchAppointments  = async ()=>{
     const response = await fetch("http://localhost:8001/api/Appointment");
     const data = await response.json()
-   setTimeout(()=>{
-        state.appointments = data
-   },2000)
+    state.appointments = data 
     console.log(state.appointments)
 }
 
-await fetchAppointments();
+
+setTimeout(async() => {
+    await fetchAppointments();
+}, 2000);
 
 </script>
 
@@ -34,8 +35,11 @@ await fetchAppointments();
         <ul>
             <li v-for="appointment in state.appointments" :key="appointment.AppintmentID">
                 {{ 
-                    appointment
+                    appointment.AppointmentDate+
+                    appointment.AppointmentTime 
+
                 }}
+
             </li>
         </ul>
 
