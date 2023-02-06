@@ -5,17 +5,10 @@ import BaseFooter from "../components/BaseFooter.vue";
 import { ref } from "vue";
 import weekDayTiming from "../data/weekDayTiming.json";
 import { formatDate } from "@vueuse/shared";
-//this hours of work must be filted based on client reserved date and time
-// and employe based working times
-// • Du lundi au jeudi et le samedi, de 9h à 12h puis de 14h à 20h
-// • Le vendredi, de 9h à 12h puis de 16h à 22h
-// • Le dimanche, de 9h à 12h
 import { useClientStore } from '../stores/ClientStore';
 
 
 const ClientStore = useClientStore();
-
-
 var userRef = ClientStore.getuserRef;
 const date = new window.Date();
 const TodayDate = new window.Date();
@@ -23,12 +16,10 @@ const DayHoursAvailable = ref(null);
 let timings = null;
 const hoursOfWork = [];
 const selectedDate = ref(null);
-
 const aviablesHours = ref([]);
 
 const addMonths = (date, months) => {
   date.setMonth(date.getMonth() + months);
-
   return date;
 };
 
@@ -72,6 +63,10 @@ const fetchTodaysHoursReserved = async (today) => {
 };
 
 const confirmAppoitement = async(e) => {
+  //todo: create appoitement in the server
+  // which has user id
+  // date and time
+  // Status ...
   const myFormData = new FormData(e.target);
   myFormData.append('AppointmentDate',selectedDate.value.id);
   myFormData.append('CustomerID',userRef);
@@ -86,12 +81,7 @@ const confirmAppoitement = async(e) => {
     });
     const data = await response.json()
     console.log(data);
-    // console.log(response.status);
-  //todo: create appoitement in the server
-  // which has user id
-  // date and time
-  // Status ...
-  console.log("confirm Appoitment")
+  
 };
 
 const onDayClick = async (day) => {
@@ -169,7 +159,7 @@ const dateAfterMonth = addMonths(date, 1);
         </div>
       </div>
     </div>
-    <div class="information">
+    <!-- <div class="information">
       <p v-if="selectedDate">
         <span class="font-semibold">Date:</span> {{ selectedDate.id }}
         <span>
@@ -186,7 +176,7 @@ const dateAfterMonth = addMonths(date, 1);
         <span class="font-semibold">Timings:</span>
         {{ timings }}
       </p>
-    </div>
+    </div> -->
     <BaseFooter />
   </div>
 </template>
