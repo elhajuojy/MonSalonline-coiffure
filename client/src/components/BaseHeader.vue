@@ -8,6 +8,11 @@ const ClientStore = useClientStore();
 
 var userRef = ClientStore.getuserRef;
 
+const logout =()=>{
+  localStorage.removeItem('userRef');
+  window.location.href = "/login";
+}
+
 // userRef = null;
 </script>
 
@@ -20,7 +25,8 @@ var userRef = ClientStore.getuserRef;
 
       <router-link to="/reserve" class="userRef" v-if="userRef">{{userRef}}</router-link>
       <router-link to="/">Home</router-link>
-      <router-link to="/login">Login</router-link>
+      <router-link v-if="!userRef" to="/login">Login</router-link>
+      <a v-if="userRef" href="#"  @click="logout">logout</a>
       <router-link to="/register">Register</router-link>
       
     </nav>
