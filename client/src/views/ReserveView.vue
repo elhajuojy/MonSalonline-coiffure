@@ -29,24 +29,18 @@ const addMonths = (date, months) => {
 const mapDayHoursAvailable = (dayTiming) => {
   var AviablesHours = []
   var monringHoursNumbers = dayTiming.morning_end - dayTiming.morning_start ;
-  console.log(monringHoursNumbers)
   var afternoonHoursNumbers = dayTiming.afternoon_end - dayTiming.afternoon_start;
-  console.log(afternoonHoursNumbers)
   var temp = dayTiming.morning_start;
   for(let i=0;i<monringHoursNumbers;i++){
-    
-    AviablesHours.push(temp)
+    AviablesHours.push(`${temp}:00:00`)
     temp++
   }
   var temp2 = dayTiming.afternoon_start;
-  console.log(temp2)
   for(let i=0;i<afternoonHoursNumbers;i++){
-    AviablesHours.push(temp2)
+    AviablesHours.push(`${temp2}:00:00`)
     temp2++;
   }
-  console.log(AviablesHours)
   aviablesHours.value = AviablesHours;
-  console.log(aviablesHours.value)
 
 };
 
@@ -66,16 +60,37 @@ function getTimingsForDay(day) {
 }
 
 
+const fetchTodaysHoursReserved = async (today)=>{
 
-const onDayClick = (day ) => {
+  return await fetch(`http://localhost:8001/api/Appointment?date=${today}`)
+
+
+}
+
+const onDayClick = async(day ) => {
   
-  console.log(day);
   selectedDate.value = day;
   timings = getTimingsForDay(day.weekdayPosition);
   mapDayHoursAvailable(timings);
+  //filter aviablesHours based on if someSelse is reseved this hour 
+  // condition is the todays date 
+  var today = day.id 
+  const response =  fetchTodaysHoursReserved(today);
 
-
+  if((await response).status == 400){
+    return console.log("no hours found in this date ")
+  } 
+  const todaysHoursReserved = await (await response).json() ;
+  //filter AviableHours besed on date on data 1
+  // filterHours(todaysHoursReserved);
+  console.log(todaysHoursReserved.length);
+  filterHours(todaysHoursReserved);
 };
+
+const filterHours = (hours)=>{
+  console.log(aviablesHours.value);
+}
+
 
 
 
@@ -103,17 +118,19 @@ const dateAfterMonth = addMonths(date, 1);
           >
           <select
             id="countries"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+            class="bg-gray-50 border border-gray-300 transition-all	 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
             ">
-            <option selected>Choose a Time </option>
-            <option v-for="date in aviablesHours " :key="date">
+            <option disabled selected>Choose a Time </option>
+            <option  v-for="date in aviablesHours " :key="date">
               {{ 
                 date
-               }}
-
+              }}
             </option>
+            
           </select>
-          
+          <button class=". text-white bg-blue-500 px-4 py-3 rounded mt-4 hover:bg-blue-600 active:bg-blue-600 ease-in transtio">
+              confirm reservation
+          </button>
         </div>
       </div>
       

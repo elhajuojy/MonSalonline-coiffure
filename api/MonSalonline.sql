@@ -86,8 +86,8 @@ VALUES
 
 INSERT INTO Appointment (CustomerID, EmployeeID, AppointmentDate, AppointmentTime, AppointmentType, AppointmentStatus)
 VALUES
-(1, 1, "2023-02-01", "10:00:00", "Haircut", "Scheduled"),
-(2, 2, "2023-02-02", "11:00:00", "Manicure", "Scheduled");
+(1, 1, "2023-02-06", "10:00:00", "Haircut", "Scheduled"),
+(2, 2, "2023-02-06", "11:00:00", "Manicure", "Scheduled");
 
 INSERT INTO SalonService (ServiceName, ServicePrice, ServiceDescription, ServiceDuration)
 VALUES
@@ -98,3 +98,5 @@ INSERT INTO ServiceRendered (AppointmentID, ServiceID, EmployeeID)
 VALUES
 (1, 1, 1),
 (2, 2, 2);
+
+

@@ -35,6 +35,28 @@ if(isset($_GET['CustomerID'])){
 
 
 
+if(isset($_GET['date'])){
+
+    $AppointmentHoursDate = $db->query("SELECT AppointmentTime FROM Appointment WHERE AppointmentDate = :date", ['date' => $_GET['date']])->statement->fetchAll();
+
+
+    if($AppointmentHoursDate){
+
+        http_response_code(Response::OK);
+        echo json_encode($AppointmentHoursDate);
+        die();
+    }
+
+    else{
+        http_response_code(Response::BAD_REQUEST);
+        echo json_encode(['message' => 'Not Found hours in this date !! ']);
+        die();
+    }
+}
+
+
+
+
 $Appoiments = $db->query("SELECT * FROM Appointment")->statement->fetchAll();
 
 
