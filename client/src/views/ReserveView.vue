@@ -47,13 +47,6 @@ const mapDayHoursAvailable = (dayTiming) => {
   aviablesHours.value = AviablesHours;
 };
 
-const allDayHours = [];
-for (let i = 0; i < 24; i++) {
-  allDayHours.push({
-    time: i,
-  });
-}
-
 function getTimingsForDay(day) {
   return weekDayTiming.find((timing) => timing.day === day);
 }
@@ -102,17 +95,11 @@ const onDayClick = async (day) => {
   let appointmentTimes = todaysHoursReserved.map(function (appointment) {
     return appointment.AppointmentTime;
   });
-  console.log(appointmentTimes);
 
   aviablesHours.value = aviablesHours.value.filter((element) => {
     return !appointmentTimes.includes(element.time);
   });
 
-  console.log(aviablesHours.value);
-};
-
-const filterHours = (hours) => {
-  console.log(aviablesHours.value);
 };
 
 const dateAfterMonth = addMonths(date, 1);
@@ -159,24 +146,6 @@ const dateAfterMonth = addMonths(date, 1);
         </div>
       </div>
     </div>
-    <!-- <div class="information">
-      <p v-if="selectedDate">
-        <span class="font-semibold">Date:</span> {{ selectedDate.id }}
-        <span>
-          <br />
-          information i need <br />
-          {{
-            selectedDate.ariaLabel +
-            "week day position" +
-            selectedDate.weekdayPosition
-          }}
-        </span>
-      </p>
-      <p v-if="timings">
-        <span class="font-semibold">Timings:</span>
-        {{ timings }}
-      </p>
-    </div> -->
     <BaseFooter />
   </div>
 </template>
