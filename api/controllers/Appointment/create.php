@@ -7,13 +7,46 @@ use core\Response;
 
 
 //appoiment/create.php information and add them to the database
-
-$newAppoiment = $_POST;
-
 $db = App::resolve(Database::class);
 
-// dd($_POST);
-//check if the customer is already in the database
+$CustomerID =  $db->query("SELECT CustomerID FROM Customer WHERE Customer_reference = :Customer_reference", ['Customer_reference' => $_POST['CustomerID']])->statement->fetch();
+
+$newAppoiment = [
+    
+        'CustomerID' => $CustomerID['CustomerID'],
+    
+        'EmployeeID' => $_POST['EmployeeID'],
+    
+        'AppointmentDate' => $_POST['AppointmentDate'],
+    
+        'AppointmentTime' => $_POST['AppointmentTIme'],
+    
+        'AppointmentStatus' => $_POST['AppointmentStatus'],
+    
+        'AppointmentType' => $_POST['AppointmentType']
+];
+
+// dd($newAppoiment);
 
 
-$db->query("INSERT INTO Appointment (CustomerID, EmployeeID, AppointmentDate, AppointmentTime, AppointmentStatus, AppointmentType, AppointmentNotes) VALUES (:CustomerID, :EmployeeID, :AppointmentDate, :AppointmentTime, :AppointmentStatus, :AppointmentType, :AppointmentNotes)", $newAppoiment);
+
+// dd($newAppoiment);
+
+
+$query = $db->query("INSERT INTO Appointment (CustomerID, EmployeeID, AppointmentDate, AppointmentTime, AppointmentStatus, AppointmentType) VALUES (:CustomerID, :EmployeeID, :AppointmentDate, :AppointmentTime, :AppointmentStatus, :AppointmentType)", $newAppoiment);
+
+if($query->statement->rowCount() > 0){
+
+    http_response_code(Response::CREATED);
+
+    echo json_encode(['message' => 'Appoiment created']);
+
+}
+
+else{
+
+    http_response_code(Response::BAD_REQUEST);
+
+    echo json_encode(['message' => 'Appoiment not created']);
+
+}
