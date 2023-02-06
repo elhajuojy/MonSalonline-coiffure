@@ -32,12 +32,18 @@ const mapDayHoursAvailable = (dayTiming) => {
   var afternoonHoursNumbers = dayTiming.afternoon_end - dayTiming.afternoon_start;
   var temp = dayTiming.morning_start;
   for(let i=0;i<monringHoursNumbers;i++){
-    AviablesHours.push(`${temp}:00:00`)
+    AviablesHours.push({
+      time : `${temp}:00:00`,
+      disabled : false
+    })
     temp++
   }
   var temp2 = dayTiming.afternoon_start;
   for(let i=0;i<afternoonHoursNumbers;i++){
-    AviablesHours.push(`${temp2}:00:00`)
+    AviablesHours.push({
+      time: `${temp2}:00:00`,
+      disabled : false
+    })
     temp2++;
   }
   aviablesHours.value = AviablesHours;
@@ -83,8 +89,16 @@ const onDayClick = async(day ) => {
   const todaysHoursReserved = await (await response).json() ;
   //filter AviableHours besed on date on data 1
   // filterHours(todaysHoursReserved);
-  console.log(todaysHoursReserved.length);
-  filterHours(todaysHoursReserved);
+  let appointmentTimes = todaysHoursReserved.map(function(appointment) {
+  return appointment.AppointmentTime;
+  });
+  console.log(appointmentTimes);
+
+  aviablesHours.value = aviablesHours.value.filter((element )=>{
+    return !appointmentTimes.includes(element.time)
+  })
+  
+  console.log(aviablesHours.value);
 };
 
 const filterHours = (hours)=>{
@@ -123,7 +137,7 @@ const dateAfterMonth = addMonths(date, 1);
             <option disabled selected>Choose a Time </option>
             <option  v-for="date in aviablesHours " :key="date">
               {{ 
-                date
+                date.time
               }}
             </option>
             
