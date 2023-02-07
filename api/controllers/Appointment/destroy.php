@@ -11,6 +11,7 @@ $db = App::resolve(Database::class);
 $AppointmentID  = $_POST['AppointmentID'];
 
 
+
 if(isset($_POST['AppointmentID'])){
 
     $db->query("DELETE FROM Appointment WHERE AppointmentID = :AppointmentID", ['AppointmentID' => $AppointmentID]);

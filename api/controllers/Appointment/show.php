@@ -11,22 +11,26 @@ $db = App::resolve(Database::class);
 
 
 
-if(isset($_GET['CustomerID'])){
+if(isset($_GET['Customer_reference'])){
 
     $Appoiment = $db->query("SELECT * FROM Appointment
         inner join Customer on Appointment.CustomerID = Customer.CustomerID
-         WHERE Appointment.CustomerID = :CustomerID", ['CustomerID' => $_GET['CustomerID']])->statement->fetch();
+         WHERE Customer.Customer_reference = :Customer_reference ", ['Customer_reference' => $_GET['Customer_reference']])->statement->fetchAll();
 
     if($Appoiment){
 
         http_response_code(Response::OK);
-        echo json_encode($Appoiment);
+        echo json_encode([
+            'message' => 'Appointments for this Customer !! ',
+            'status' => true,
+            'data' => $Appoiment
+        ]);
         die();
     }
 
     else{
-        http_response_code(Response::NOT_FOUND);
-        echo json_encode(['message' => 'Not Found !! ']);
+        http_response_code(Response::BAD_REQUEST);
+        echo json_encode(['message' => 'No Appointments for this Customer !! ','status' => false]);
         die();
     }
 }

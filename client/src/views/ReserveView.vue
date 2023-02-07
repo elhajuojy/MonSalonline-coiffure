@@ -2,10 +2,11 @@
 import TheAppointments from "../components/TheAppointments.vue";
 import BaseHeader from "../components/BaseHeader.vue";
 import BaseFooter from "../components/BaseFooter.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import weekDayTiming from "../data/weekDayTiming.json";
 import { formatDate } from "@vueuse/shared";
 import { useClientStore } from '../stores/ClientStore';
+import Swal from 'sweetalert2'
 
 
 const ClientStore = useClientStore();
@@ -17,6 +18,13 @@ let timings = null;
 const hoursOfWork = [];
 const selectedDate = ref(null);
 const aviablesHours = ref([]);
+
+
+onMounted(()=>{
+  ClientStore.fetchClientAppointments();
+})
+
+
 
 const addMonths = (date, months) => {
   date.setMonth(date.getMonth() + months);
@@ -74,8 +82,27 @@ const confirmAppoitement = async(e) => {
     });
     const data = await response.json()
     console.log(data);
-  
+    ClientStore.fetchClientAppointments()
+    Swal.fire(
+      'Thank You !',
+      'Your Appointment is confirmed',
+      'success'
+    );
 };
+
+
+const cancelAppointment = async (e)=>{
+  const myFormData = new FormData(e.target);
+  const response = await fetch("http://localhost:8001/api/Appointment",{
+        method: 'POST',
+        headers: {
+        },
+        body: myFormData
+    });
+    const data = await response.json()
+    console.log(data);
+    ClientStore.fetchClientAppointments();
+}
 
 const onDayClick = async (day) => {
   selectedDate.value = day;
@@ -143,9 +170,64 @@ const dateAfterMonth = addMonths(date, 1);
               confirm reservation
             </button>
           </form>
+          
         </div>
       </div>
+      
     </div>
+    <div v-if="ClientStore.userAppointments" class="resevertion bg-white m-auto w-full">
+      <!-- get length of userAppointments -->
+      
+      <h1 class="text-center text-4xl font-semibold">Your Reservations</h1>
+
+        <table class="m-auto">
+          <thead>
+            <tr>
+              <th class="text-center">
+                Date
+              </th>
+              <th class="text-center">
+                Time
+              </th>
+              <th class="text-center">
+                Status
+              </th>
+              <th class="text-center">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="appointment in ClientStore.userAppointments" :key="appointment">
+              <td class="px-2 py-4">{{appointment.AppointmentDate}}</td>
+              <td class="px-2 py-4">{{appointment.AppointmentTime}}</td>
+              <td class="px-2 py-4">{{appointment.AppointmentStatus}}</td>
+              <td class="px-2 py-4">
+                <form @submit.prevent="cancelAppointment">
+                  <input type="hidden" name="AppointmentID" :value="appointment.AppointmentID" />
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button
+                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  Cancel
+                </button>
+                </form>
+              </td>
+              <!-- update appointment status -->
+              <td class="px-2 py-4">
+                <form @submit.prevent="cancelAppointment">
+                  <input type="hidden" name="AppointmentID" :value="appointment.AppointmentID" />
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Update 
+                </button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
     <BaseFooter />
   </div>
 </template>
@@ -153,8 +235,7 @@ const dateAfterMonth = addMonths(date, 1);
 <style scoped>
 .rendez-vous {
   width: 100%;
-  height: 90vh;
-  background-image: url("https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
+  height: 80vh;
   background-size: cover;
   display: grid;
   justify-content: center;
