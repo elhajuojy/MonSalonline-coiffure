@@ -6,8 +6,6 @@
 
 ![alt text](https://simplonline.co/_next/image?url=https%3A%2F%2Fsimplonline-v3-prod.s3.eu-west-3.amazonaws.com%2Fmedia%2Fimage%2Fpng%2F42bee9c2-2aad-4eb9-8c9a-82d6d260b828.png&w=1280&q=75 "Logo Title Text 1")
 
-![Screenshot 2023-02-04 at 13 08 55](https://user-images.githubusercontent.com/86893073/216766880-f342df00-67c7-40b8-8b35-3ff6bcdc3c02.png)
-
 
 Contexte du projet
 Un salon de coiffure souhaite permettre à ses clients de prendre rendez-vous en ligne. Chaque rendez-vous dure une heure. Le client veut une interface «user friendly» accessible sure toute platforme et qui respecte les bon normes du UX et UI
@@ -24,7 +22,9 @@ Les horaires d’ouverture du salon sont comme suit :
 
 • Le dimanche, de 9h à 12h
 
-​
+​![Screenshot 2023-02-07 at 11 48 34](https://user-images.githubusercontent.com/86893073/217224505-768d9b78-b26f-4460-b18c-3edad578ca3b.png)
+![Screenshot 2023-02-07 at 11 48 30](https://user-images.githubusercontent.com/86893073/217224513-23a285ed-1b23-4c60-b8ba-c22579819323.png)
+
 
 Backoffice (Optionnel): Une page comprenant un calendrier et un emploi du temps des rendez-vous pris. En sélectionnant un jour sur le calendrier l’administrateur peut afficher les informations des rendez-vous du jour (horaire, nom du client, téléphone du client).
 
