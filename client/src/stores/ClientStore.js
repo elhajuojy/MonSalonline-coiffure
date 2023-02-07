@@ -29,6 +29,9 @@ export const useClientStore=  defineStore('ClientStore',{
                     console.log(this.userAppointments)
                 })
         },
+        getUserRefInLocalStorage(){
+            this.userRef = localStorage.getItem('userRef')
+        },
         redirectwhenUserIsNotConnected(){
             if(this.userRef === null){
                 window.location.href = '/login'
