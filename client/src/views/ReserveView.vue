@@ -12,16 +12,20 @@ import Swal from 'sweetalert2'
 const ClientStore = useClientStore();
 var userRef = ClientStore.getuserRef;
 const date = new window.Date();
-const TodayDate = new window.Date();
+const TodayDate = ref(new window.Date());
 const DayHoursAvailable = ref(null);
 let timings = null;
 const hoursOfWork = [];
 const selectedDate = ref(null);
 const aviablesHours = ref([]);
-
+const isUpdate = ref(false) ; 
+let appointmentID = null;
+let updateForm = null;
+let SelectedTime = ref(null);
 
 onMounted(()=>{
   ClientStore.fetchClientAppointments();
+
 })
 
 
@@ -104,7 +108,52 @@ const cancelAppointment = async (e)=>{
     ClientStore.fetchClientAppointments();
 }
 
+
+const updateAppointment = async ( event , date , time,IdAppointment)=>{
+  isUpdate.value = true;
+  TodayDate.value = date;
+  appointmentID = IdAppointment;
+}
+
+const confirmUpdate = async (e)=>{
+  const myFormData = new FormData(e.target);
+  myFormData.append('AppointmentDate',selectedDate.value.id);
+  myFormData.append('_method',"UPDATE");
+  myFormData.append('CustomerID',userRef);
+  myFormData.append("AppointmentStatus","Scheduled")
+  myFormData.append("EmployeeID",1);
+  myFormData.append("AppointmentType","haircut")
+  myFormData.append("AppointmentID",appointmentID)
+
+  const response = await fetch("http://localhost:8001/api/Appointment",{
+        method: 'POST',
+        headers: {
+        },
+        body: myFormData
+    });
+    const data = await response.json()
+    console.log(data);
+    ClientStore.fetchClientAppointments();
+    Swal.fire(
+      'Thank You !',
+      'Your Appointment is Updated Successfully ',
+      'success'
+    );
+  isUpdate.value = false;
+
+}
+
+const submitForm = (e)=>{
+  console.log("submit form ")
+  if(isUpdate.value === true){
+    confirmUpdate(e);
+    return
+  }
+  confirmAppoitement(e);
+}
+
 const onDayClick = async (day) => {
+  console.log(day)
   selectedDate.value = day;
   timings = getTimingsForDay(day.weekdayPosition);
   mapDayHoursAvailable(timings);
@@ -148,7 +197,7 @@ const dateAfterMonth = addMonths(date, 1);
           <label for="countries" class="block mb-2 text-sm font-medium"
             >Select an option</label
           >
-          <form action="" @submit.prevent="confirmAppoitement" >
+          <form action="" @submit.prevent="submitForm" >
             <select
               id="countries"
               class="bg-gray-50 border border-gray-300 transition-all text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -159,6 +208,7 @@ const dateAfterMonth = addMonths(date, 1);
                 v-for="date in aviablesHours"
                 :value="date.time"
                 :key="date"
+                :v-model="SelectedTime"
               >
                 {{ date.time }}
               </option>
@@ -167,7 +217,12 @@ const dateAfterMonth = addMonths(date, 1);
               type="submit"
               class=". text-white bg-blue-500 px-4 py-3 rounded mt-4 hover:bg-blue-600 active:bg-blue-600 ease-in transtio"
             >
-              confirm reservation
+            <span v-if="isUpdate === true" >
+                Update Appointement 
+            </span>
+            <span v-else >
+                Confirm Appointement
+            </span>
             </button>
           </form>
           
@@ -214,9 +269,9 @@ const dateAfterMonth = addMonths(date, 1);
               </td>
               <!-- update appointment status -->
               <td class="px-2 py-4">
-                <form @submit.prevent="cancelAppointment">
+                <form @submit.prevent="updateAppointment($event , appointment.AppointmentDate,appointment.AppointmentTime,appointment.AppointmentID)">
                   <input type="hidden" name="AppointmentID" :value="appointment.AppointmentID" />
-                  <input type="hidden" name="_method" value="DELETE" />
+                  <input type="hidden" name="_method" value="UPDATE" />
                   <button
                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   Update 
