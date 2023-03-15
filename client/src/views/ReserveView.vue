@@ -12,6 +12,16 @@ import Swal from 'sweetalert2'
 const ClientStore = useClientStore();
 var userRef = ClientStore.getuserRef;
 const date = new window.Date();
+
+
+const today = new Date();
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
+const formattedDate = `${year}-${month}-${day}`;
+console.log(formattedDate);
+
+
 const TodayDate = ref(new window.Date());
 const DayHoursAvailable = ref(null);
 let timings = null;
@@ -23,8 +33,11 @@ let appointmentID = null;
 let updateForm = null;
 let SelectedTime = ref(null);
 
-onMounted(()=>{
+onMounted(async()=>{
   ClientStore.fetchClientAppointments();
+  timings = getTimingsForDay(today.getDay());
+  mapDayHoursAvailable(timings);
+  await fetchTodaysHoursReserved(formattedDate);
 
 })
 
@@ -64,16 +77,39 @@ function getTimingsForDay(day) {
 }
 
 const fetchTodaysHoursReserved = async (today) => {
-  return await fetch(`http://localhost:8001/api/Appointment?date=${today}`);
+  
+  aviablesHours.value.forEach((element) => {
+    element.disabled = false;
+  });
+   var response = await fetch(`http://localhost:8001/api/Appointment?date=${today}`);
+   if ((await response).status == 400) {
+    return console.log("no hours found in this date ");
+  }
+  const todaysHoursReserved = await (await response).json();
+  let appointmentTimes = todaysHoursReserved.map(function (appointment) {
+    return appointment.AppointmentTime;
+  });
+  
+  // aviablesHours.value = aviablesHours.value.filter((element) => {
+  //   return !appointmentTimes.includes(element.time);
+  // });
+  aviablesHours.value.forEach((element) => {
+    if (appointmentTimes.includes(element.time)) {
+      element.disabled = true;
+    }
+    
+  });
+  console.log(aviablesHours.value);
+  console.log(appointmentTimes);
+
+  
+
 };
 
-const confirmAppoitement = async(e) => {
-  //todo: create appoitement in the server
-  // which has user id
-  // date and time
-  // Status ...
-  const myFormData = new FormData(e.target);
+const confirmAppoitement = async(time) => {
+  const myFormData = new FormData();
   myFormData.append('AppointmentDate',selectedDate.value.id);
+  myFormData.append('AppointmentTIme',time);
   myFormData.append('CustomerID',userRef);
   myFormData.append("AppointmentStatus","Scheduled")
   myFormData.append("EmployeeID",1);
@@ -92,6 +128,7 @@ const confirmAppoitement = async(e) => {
       'Your Appointment is confirmed',
       'success'
     );
+    location.reload();
 };
 
 
@@ -153,28 +190,20 @@ const submitForm = (e)=>{
 }
 
 const onDayClick = async (day) => {
-  console.log(day)
+  console.log(day);
+  console.log("day clicked");
   selectedDate.value = day;
   timings = getTimingsForDay(day.weekdayPosition);
   mapDayHoursAvailable(timings);
   //filter aviablesHours based on if someSelse is reseved this hour
   // condition is the todays date
   var today = day.id;
-  const response = fetchTodaysHoursReserved(today);
+  console.log(today);
+  fetchTodaysHoursReserved(today);
+  
 
-  if ((await response).status == 400) {
-    return console.log("no hours found in this date ");
-  }
-  const todaysHoursReserved = await (await response).json();
-  //filter AviableHours besed on date on data 1
-  // filterHours(todaysHoursReserved);
-  let appointmentTimes = todaysHoursReserved.map(function (appointment) {
-    return appointment.AppointmentTime;
-  });
-
-  aviablesHours.value = aviablesHours.value.filter((element) => {
-    return !appointmentTimes.includes(element.time);
-  });
+  
+  
 
 };
 
@@ -184,15 +213,26 @@ const dateAfterMonth = addMonths(date, 1);
 <template>
   <div>
     <BaseHeader />
-    <div class="rendez-vous">
-      <div class="rendez-card shadow-lg" id="card">
+    <div class="rendez-vous ">
+      <div class="rendez-card py-6 shadow-lg" id="card">
         <h1 class="text-center text-4xl font-semibold">Rendez vous</h1>
-        <v-date-picker
+        <div class="flex gap-6 ">
+          <v-date-picker
           v-model="TodayDate"
           :max-date="dateAfterMonth"
           :min-date="new Date()"
           @dayclick="onDayClick"
         />
+        <div class="time-grid  border rounded text-white">
+          <div :class="!date.disabled  ? 'bg-blue-500' : 'bg-red-500'" @click="!date.disabled? confirmAppoitement(date.time):null" class="time" v-for="date in aviablesHours" :key="date">
+            <div class="time-hour" >{{ date.time }}</div>
+            <input type="hidden" :value="date.time" >
+            <div class="time-available">
+              <div class="time-available-circle"></div>
+            </div>
+          </div>
+        </div>
+        </div>
         <div class="select-time">
           <label for="countries" class="block mb-2 text-sm font-medium"
             >Select an option</label
@@ -298,7 +338,7 @@ const dateAfterMonth = addMonths(date, 1);
 }
 
 #card {
-  width: 40vw;
+  width: 80vw;
   min-height: 60vh;
   background-color: whitesmoke;
   border-radius: 5px;
@@ -309,6 +349,33 @@ const dateAfterMonth = addMonths(date, 1);
   align-content: center;
 }
 
+.time-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 1rem;
+  justify-items: center;
+  align-items: center;
+  
+}
+
+.time{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  cursor: pointer;
+  
+}
+.time-hour{
+  font-size: 1rem;
+  font-weight: 600;
+}
 @media (max-width: 850px) {
   #card {
     width: 90vw;
