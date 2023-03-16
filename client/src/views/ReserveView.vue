@@ -152,9 +152,10 @@ const updateAppointment = async ( event , date , time,IdAppointment)=>{
   appointmentID = IdAppointment;
 }
 
-const confirmUpdate = async (e)=>{
-  const myFormData = new FormData(e.target);
+const confirmUpdate = async (time)=>{
+  const myFormData = new FormData();
   myFormData.append('AppointmentDate',selectedDate.value.id);
+  myFormData.append('AppointmentTIme',time);
   myFormData.append('_method',"UPDATE");
   myFormData.append('CustomerID',userRef);
   myFormData.append("AppointmentStatus","Scheduled")
@@ -183,6 +184,7 @@ const confirmUpdate = async (e)=>{
 const submitForm = (e)=>{
   console.log("submit form ")
   if(isUpdate.value === true){
+    console.log("update form date remove old one and add new one");
     confirmUpdate(e);
     return
   }
@@ -224,7 +226,7 @@ const dateAfterMonth = addMonths(date, 1);
           @dayclick="onDayClick"
         />
         <div class="time-grid  border rounded text-white">
-          <div :class="!date.disabled  ? 'bg-blue-500' : 'bg-red-500'" @click="!date.disabled? confirmAppoitement(date.time):null" class="time" v-for="date in aviablesHours" :key="date">
+          <div :class="!date.disabled  ? 'bg-blue-500' : 'bg-red-500'" @click="!date.disabled? submitForm(date.time):null" class="time" v-for="date in aviablesHours" :key="date">
             <div class="time-hour" >{{ date.time }}</div>
             <input type="hidden" :value="date.time" >
             <div class="time-available">
