@@ -5,22 +5,19 @@ import BaseFooter from "../components/BaseFooter.vue";
 import { onMounted, ref } from "vue";
 import weekDayTiming from "../data/weekDayTiming.json";
 import { formatDate } from "@vueuse/shared";
-import { useClientStore } from '../stores/ClientStore';
-import Swal from 'sweetalert2'
-
+import { useClientStore } from "../stores/ClientStore";
+import Swal from "sweetalert2";
 
 const ClientStore = useClientStore();
 var userRef = ClientStore.getuserRef;
 const date = new window.Date();
 
-
 const today = new Date();
 const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, '0');
-const day = String(today.getDate()).padStart(2, '0');
+const month = String(today.getMonth() + 1).padStart(2, "0");
+const day = String(today.getDate()).padStart(2, "0");
 const formattedDate = `${year}-${month}-${day}`;
 console.log(formattedDate);
-
 
 const TodayDate = ref(new window.Date());
 const DayHoursAvailable = ref(null);
@@ -28,20 +25,17 @@ let timings = null;
 const hoursOfWork = [];
 const selectedDate = ref(null);
 const aviablesHours = ref([]);
-const isUpdate = ref(false) ; 
+const isUpdate = ref(false);
 let appointmentID = null;
 let updateForm = null;
 let SelectedTime = ref(null);
 
-onMounted(async()=>{
+onMounted(async () => {
   ClientStore.fetchClientAppointments();
   timings = getTimingsForDay(today.getDay());
   mapDayHoursAvailable(timings);
   await fetchTodaysHoursReserved(formattedDate);
-
-})
-
-
+});
 
 const addMonths = (date, months) => {
   date.setMonth(date.getMonth() + months);
@@ -77,19 +71,20 @@ function getTimingsForDay(day) {
 }
 
 const fetchTodaysHoursReserved = async (today) => {
-  
   aviablesHours.value.forEach((element) => {
     element.disabled = false;
   });
-   var response = await fetch(`http://localhost:8001/api/Appointment?date=${today}`);
-   if ((await response).status == 400) {
+  var response = await fetch(
+    `http://localhost:8001/api/Appointment?date=${today}`
+  );
+  if ((await response).status == 400) {
     return console.log("no hours found in this date ");
   }
   const todaysHoursReserved = await (await response).json();
   let appointmentTimes = todaysHoursReserved.map(function (appointment) {
     return appointment.AppointmentTime;
   });
-  
+
   // aviablesHours.value = aviablesHours.value.filter((element) => {
   //   return !appointmentTimes.includes(element.time);
   // });
@@ -97,99 +92,112 @@ const fetchTodaysHoursReserved = async (today) => {
     if (appointmentTimes.includes(element.time)) {
       element.disabled = true;
     }
-    
   });
   console.log(aviablesHours.value);
   console.log(appointmentTimes);
-
-  
-
 };
 
-const confirmAppoitement = async(time) => {
+const confirmAppoitement = async (time) => {
   const myFormData = new FormData();
-  myFormData.append('AppointmentDate',selectedDate.value.id);
-  myFormData.append('AppointmentTIme',time);
-  myFormData.append('CustomerID',userRef);
-  myFormData.append("AppointmentStatus","Scheduled")
-  myFormData.append("EmployeeID",1);
-  myFormData.append("AppointmentType","haircut")
-  const response = await fetch("http://localhost:8001/api/Appointment",{
-        method: 'POST',
-        headers: {
-        },
-        body: myFormData
-    });
-    const data = await response.json()
-    console.log(data);
-    ClientStore.fetchClientAppointments()
-    Swal.fire(
-      'Thank You !',
-      'Your Appointment is confirmed',
-      'success'
-    );
-    location.reload();
+  myFormData.append("AppointmentDate", selectedDate.value.id);
+  myFormData.append("AppointmentTIme", time);
+  myFormData.append("CustomerID", userRef);
+  myFormData.append("AppointmentStatus", "Scheduled");
+  myFormData.append("EmployeeID", 1);
+  myFormData.append("AppointmentType", "haircut");
+
+  Swal.fire({
+    title: "Do you want to save the changes?",
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Save",
+    denyButtonText: `Don't save`,
+  }).then(async (result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      const response = await fetch("http://localhost:8001/api/Appointment", {
+        method: "POST",
+        headers: {},
+        body: myFormData,
+      });
+      const data = await response.json();
+      console.log(data);
+      ClientStore.fetchClientAppointments();
+      Swal.fire("Thank You !", "Your Appointment is confirmed", "success");
+      location.reload();
+    } else if (result.isDenied) {
+      Swal.fire("Changes are not saved", "", "info");
+    }
+  });
 };
 
-
-const cancelAppointment = async (e)=>{
+const cancelAppointment = async (e) => {
   const myFormData = new FormData(e.target);
-  const response = await fetch("http://localhost:8001/api/Appointment",{
-        method: 'POST',
-        headers: {
-        },
-        body: myFormData
-    });
-    const data = await response.json()
-    console.log(data);
-    ClientStore.fetchClientAppointments();
-}
+  const response = await fetch("http://localhost:8001/api/Appointment", {
+    method: "POST",
+    headers: {},
+    body: myFormData,
+  });
+  const data = await response.json();
+  console.log(data);
+  ClientStore.fetchClientAppointments();
+};
 
-
-const updateAppointment = async ( event , date , time,IdAppointment)=>{
+const updateAppointment = async (event, date, time, IdAppointment) => {
   isUpdate.value = true;
   TodayDate.value = date;
   appointmentID = IdAppointment;
-}
+};
 
-const confirmUpdate = async (time)=>{
+const confirmUpdate = async (time) => {
   const myFormData = new FormData();
-  myFormData.append('AppointmentDate',selectedDate.value.id);
-  myFormData.append('AppointmentTIme',time);
-  myFormData.append('_method',"UPDATE");
-  myFormData.append('CustomerID',userRef);
-  myFormData.append("AppointmentStatus","Scheduled")
-  myFormData.append("EmployeeID",1);
-  myFormData.append("AppointmentType","haircut")
-  myFormData.append("AppointmentID",appointmentID)
+  myFormData.append("AppointmentDate", selectedDate.value.id);
+  myFormData.append("AppointmentTIme", time);
+  myFormData.append("_method", "UPDATE");
+  myFormData.append("CustomerID", userRef);
+  myFormData.append("AppointmentStatus", "Scheduled");
+  myFormData.append("EmployeeID", 1);
+  myFormData.append("AppointmentType", "haircut");
+  myFormData.append("AppointmentID", appointmentID);
 
-  const response = await fetch("http://localhost:8001/api/Appointment",{
-        method: 'POST',
-        headers: {
-        },
-        body: myFormData
-    });
-    const data = await response.json()
-    console.log(data);
-    ClientStore.fetchClientAppointments();
-    Swal.fire(
-      'Thank You !',
-      'Your Appointment is Updated Successfully ',
-      'success'
-    );
+  Swal.fire({
+    title: "Do you want to save the changes?",
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Save",
+    denyButtonText: `Don't save`,
+  }).then(async (result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      const response = await fetch("http://localhost:8001/api/Appointment", {
+        method: "POST",
+        headers: {},
+        body: myFormData,
+      });
+      const data = await response.json();
+      console.log(data);
+      ClientStore.fetchClientAppointments();
+      Swal.fire(
+        "Thank You !",
+        "Your Appointment is Updated Successfully ",
+        "success"
+      );
+    } else if (result.isDenied) {
+      Swal.fire("Changes are not saved", "", "info");
+    }
+  });
   isUpdate.value = false;
+};
 
-}
-
-const submitForm = (e)=>{
-  console.log("submit form ")
-  if(isUpdate.value === true){
+const submitForm = (e) => {
+  console.log("submit form ");
+  if (isUpdate.value === true) {
     console.log("update form date remove old one and add new one");
     confirmUpdate(e);
-    return
+    return;
   }
   confirmAppoitement(e);
-}
+};
 
 const onDayClick = async (day) => {
   console.log(day);
@@ -202,11 +210,6 @@ const onDayClick = async (day) => {
   var today = day.id;
   console.log(today);
   fetchTodaysHoursReserved(today);
-  
-
-  
-  
-
 };
 
 const dateAfterMonth = addMonths(date, 1);
@@ -215,31 +218,37 @@ const dateAfterMonth = addMonths(date, 1);
 <template>
   <div>
     <BaseHeader />
-    <div class="rendez-vous ">
+    <div class="rendez-vous">
       <div class="rendez-card py-6 shadow-lg" id="card">
         <h1 class="text-center text-4xl font-semibold">Rendez vous</h1>
-        <div class="flex gap-6 ">
+        <div class="flex gap-6">
           <v-date-picker
-          v-model="TodayDate"
-          :max-date="dateAfterMonth"
-          :min-date="new Date()"
-          @dayclick="onDayClick"
-        />
-        <div class="time-grid  border rounded text-white">
-          <div :class="!date.disabled  ? 'bg-blue-500' : 'bg-red-500'" @click="!date.disabled? submitForm(date.time):null" class="time" v-for="date in aviablesHours" :key="date">
-            <div class="time-hour" >{{ date.time }}</div>
-            <input type="hidden" :value="date.time" >
-            <div class="time-available">
-              <div class="time-available-circle"></div>
+            v-model="TodayDate"
+            :max-date="dateAfterMonth"
+            :min-date="new Date()"
+            @dayclick="onDayClick"
+          />
+          <div class="time-grid border rounded text-white">
+            <div
+              :class="!date.disabled ? 'bg-blue-500' : 'bg-red-500'"
+              @click="!date.disabled ? submitForm(date.time) : null"
+              class="time"
+              v-for="date in aviablesHours"
+              :key="date"
+            >
+              <div class="time-hour">{{ date.time }}</div>
+              <input type="hidden" :value="date.time" />
+              <div class="time-available">
+                <div class="time-available-circle"></div>
+              </div>
             </div>
           </div>
-        </div>
         </div>
         <div class="select-time">
           <label for="countries" class="block mb-2 text-sm font-medium"
             >Select an option</label
           >
-          <form action="" @submit.prevent="submitForm" >
+          <form action="" @submit.prevent="submitForm">
             <select
               id="countries"
               class="bg-gray-50 border border-gray-300 transition-all text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -259,70 +268,81 @@ const dateAfterMonth = addMonths(date, 1);
               type="submit"
               class=". text-white bg-blue-500 px-4 py-3 rounded mt-4 hover:bg-blue-600 active:bg-blue-600 ease-in transtio"
             >
-            <span v-if="isUpdate === true" >
-                Update Appointement 
-            </span>
-            <span v-else >
-                Confirm Appointement
-            </span>
+              <span v-if="isUpdate === true"> Update Appointement </span>
+              <span v-else> Confirm Appointement </span>
             </button>
           </form>
-          
         </div>
       </div>
-      
     </div>
-    <div v-if="ClientStore.userAppointments" class="resevertion bg-white m-auto w-full">
+    <div
+      v-if="ClientStore.userAppointments"
+      class="resevertion bg-white m-auto w-full"
+    >
       <!-- get length of userAppointments -->
-      
+
       <h1 class="text-center text-4xl font-semibold">Your Reservations</h1>
 
-        <table class="m-auto">
-          <thead>
-            <tr>
-              <th class="text-center">
-                Date
-              </th>
-              <th class="text-center">
-                Time
-              </th>
-              <th class="text-center">
-                Status
-              </th>
-              <th class="text-center">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="appointment in ClientStore.userAppointments" :key="appointment">
-              <td class="px-2 py-4">{{appointment.AppointmentDate}}</td>
-              <td class="px-2 py-4">{{appointment.AppointmentTime}}</td>
-              <td class="px-2 py-4">{{appointment.AppointmentStatus}}</td>
-              <td class="px-2 py-4">
-                <form @submit.prevent="cancelAppointment">
-                  <input type="hidden" name="AppointmentID" :value="appointment.AppointmentID" />
-                  <input type="hidden" name="_method" value="DELETE" />
-                  <button
-                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+      <table class="m-auto">
+        <thead>
+          <tr>
+            <th class="text-center">Date</th>
+            <th class="text-center">Time</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="appointment in ClientStore.userAppointments"
+            :key="appointment"
+          >
+            <td class="px-2 py-4">{{ appointment.AppointmentDate }}</td>
+            <td class="px-2 py-4">{{ appointment.AppointmentTime }}</td>
+            <td class="px-2 py-4">{{ appointment.AppointmentStatus }}</td>
+            <td class="px-2 py-4">
+              <form @submit.prevent="cancelAppointment">
+                <input
+                  type="hidden"
+                  name="AppointmentID"
+                  :value="appointment.AppointmentID"
+                />
+                <input type="hidden" name="_method" value="DELETE" />
+                <button
+                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                >
                   Cancel
                 </button>
-                </form>
-              </td>
-              <!-- update appointment status -->
-              <td class="px-2 py-4">
-                <form @submit.prevent="updateAppointment($event , appointment.AppointmentDate,appointment.AppointmentTime,appointment.AppointmentID)">
-                  <input type="hidden" name="AppointmentID" :value="appointment.AppointmentID" />
-                  <input type="hidden" name="_method" value="UPDATE" />
-                  <button
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Update 
+              </form>
+            </td>
+            <!-- update appointment status -->
+            <td class="px-2 py-4">
+              <form
+                @submit.prevent="
+                  updateAppointment(
+                    $event,
+                    appointment.AppointmentDate,
+                    appointment.AppointmentTime,
+                    appointment.AppointmentID
+                  )
+                "
+              >
+                <input
+                  type="hidden"
+                  name="AppointmentID"
+                  :value="appointment.AppointmentID"
+                />
+                <input type="hidden" name="_method" value="UPDATE" />
+                <button
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Update
                 </button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <BaseFooter />
@@ -351,7 +371,7 @@ const dateAfterMonth = addMonths(date, 1);
   align-content: center;
 }
 
-.time-grid{
+.time-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -359,10 +379,9 @@ const dateAfterMonth = addMonths(date, 1);
   padding: 1rem;
   justify-items: center;
   align-items: center;
-  
 }
 
-.time{
+.time {
   width: 100%;
   height: 100%;
   display: grid;
@@ -372,9 +391,8 @@ const dateAfterMonth = addMonths(date, 1);
   border: 1px solid #ccc;
   padding: 0.5rem;
   cursor: pointer;
-  
 }
-.time-hour{
+.time-hour {
   font-size: 1rem;
   font-weight: 600;
 }

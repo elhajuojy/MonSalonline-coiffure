@@ -25,6 +25,8 @@ $city = $newCustomer['City'];
 $state = $newCustomer['State'];
 $randomReference = randomString(10);
 
+
+
 if(Validator::string($firstname, 2, 50) && Validator::string($lastname, 2, 50) && Validator::email($email) && Validator::string($phone, 10, 10) && Validator::string($address, 2, 50) && Validator::string($city, 2, 50) && Validator::string($state, 2, 50)){
    
     $db->query("insert into Customer (FirstName, LastName, Email, PhoneNumber, Address, City, State, Customer_reference) values (:FirstName, :LastName, :Email, :PhoneNumber, :Address, :City, :State, :Customer_reference)", 
@@ -45,7 +47,7 @@ if(Validator::string($firstname, 2, 50) && Validator::string($lastname, 2, 50) &
 }
 
 else{
-    http_response_code(Response::BAD_REQUEST);
+    http_response_code(501);
     echo json_encode(['message' => 'Bad Request some inpus are not valid']);
 }
 
